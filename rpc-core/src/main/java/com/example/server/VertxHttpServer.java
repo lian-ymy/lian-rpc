@@ -2,8 +2,6 @@ package com.example.server;
 
 import io.vertx.core.Vertx;
 
-import java.io.PrintStream;
-
 /**
  * Http服务实现类
  */
