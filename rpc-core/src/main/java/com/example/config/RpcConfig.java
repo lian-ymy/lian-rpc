@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class RpcConfig {
     /**
+     * 模拟调用
+     */
+    private boolean mock = false;
+    /**
      * 名称
      */
     private String name = "lian-rpc";

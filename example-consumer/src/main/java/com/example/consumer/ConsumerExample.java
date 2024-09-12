@@ -1,11 +1,23 @@
 package com.example.consumer;
 
+import com.example.common.model.User;
+import com.example.common.service.UserService;
 import com.example.config.RpcConfig;
+import com.example.proxy.ServiceProxy;
+import com.example.proxy.ServiceProxyFactory;
 import com.example.utils.ConfigUtils;
 
 public class ConsumerExample {
     public static void main(String[] args) {
-        RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, "rpc");
-        System.out.println(rpc);
+        UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+        User user = new User();
+        user.setName("镜流");
+        User newUser = userService.getUser(user);
+        if (newUser == null) {
+            System.out.println("newUser == null");
+        } else {
+            System.out.println(newUser.getName());
+        }
+        System.out.println(userService.getNumber());
     }
 }
