@@ -3,8 +3,10 @@ package com.example.server;
 import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
 import com.example.registry.LocalRegistry;
+import com.example.rpc.RpcApplication;
 import com.example.serializer.JdkSerializer;
 import com.example.serializer.Serializer;
+import com.example.serializer.SerializerFactory;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
@@ -20,7 +22,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest request) {
         //指定序列化器
-        final Serializer serializer = new JdkSerializer();
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         //记录日志
         System.out.println("Received request: "+ request.method() + " " + request.uri());

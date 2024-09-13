@@ -1,0 +1,3 @@
+jdk=com.example.serializer.JdkSerializer
+hessian=com.example.serializer.HessianSerializer
+json=com.example.serializer.JSONSerializer

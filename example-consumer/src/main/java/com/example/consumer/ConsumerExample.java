@@ -16,8 +16,7 @@ public class ConsumerExample {
         if (newUser == null) {
             System.out.println("newUser == null");
         } else {
-            System.out.println(newUser.getName());
+            System.out.println("获取到的新用户名称：" + newUser.getName());
         }
-        System.out.println(userService.getNumber());
     }
 }

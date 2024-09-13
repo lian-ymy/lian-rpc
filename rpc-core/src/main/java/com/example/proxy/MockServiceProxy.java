@@ -1,7 +1,5 @@
 package com.example.proxy;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -13,7 +11,6 @@ public class MockServiceProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         //根据方法的返回值类型，生成特定的默认值对象
         Class<?> methodReturnType = method.getReturnType();
-//        log.info("mock invoke{}",method.getName());
         return getDefaultObject(methodReturnType);
     }
 
