@@ -3,7 +3,6 @@ package com.example.proxy;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.example.config.RegistryConfig;
 import com.example.config.RpcConfig;
 import com.example.constant.RpcConstant;
 import com.example.model.RpcRequest;

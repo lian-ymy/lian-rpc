@@ -15,5 +15,17 @@ public class ConsumerExample {
         } else {
             System.out.println("获取到的新用户名称：" + newUser.getName());
         }
+        newUser = userService.getUser(user);
+        if (newUser == null) {
+            System.out.println("newUser == null");
+        } else {
+            System.out.println("获取到的新用户名称：" + newUser.getName());
+        }
+        newUser = userService.getUser(user);
+        if (newUser == null) {
+            System.out.println("newUser == null");
+        } else {
+            System.out.println("获取到的新用户名称：" + newUser.getName());
+        }
     }
 }

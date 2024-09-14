@@ -59,4 +59,10 @@ public class testEtcdRegistry {
         serviceMetaInfo.setServicePort(81);
         registry.unRegister(serviceMetaInfo);
     }
+
+    @Test
+    public void heartBean() throws Exception {
+        register();
+        Thread.sleep(60*1000L);
+    }
 }
