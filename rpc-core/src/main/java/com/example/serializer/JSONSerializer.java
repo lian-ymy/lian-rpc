@@ -3,7 +3,6 @@ package com.example.serializer;
 
 import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;

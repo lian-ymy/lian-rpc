@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class RpcConfig {
     /**
+     * 注册中心配置
+     */
+    private RegistryConfig registryConfig = new RegistryConfig();
+    /**
      * 序列化器
      */
     private String serializer = SerializerKeys.JDK;
@@ -29,10 +33,10 @@ public class RpcConfig {
     /**
      * 服务器主机名
      */
-    private String host = "localhost";
+    private String serverHost = "localhost";
 
     /**
      * 服务器端口号
      */
-    private Integer serverPost = 8080;
+    private Integer serverPort = 8080;
 }

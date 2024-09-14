@@ -1,7 +1,10 @@
 package com.example.rpc;
 
+import com.example.config.RegistryConfig;
 import com.example.config.RpcConfig;
 import com.example.constant.RpcConstant;
+import com.example.registry.Registry;
+import com.example.registry.RegistryFactory;
 import com.example.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * RPC框架应用
  * 相当于holder，存放了项目全局用到的变量，双检锁单例实现
  */
+@Slf4j
 public class RpcApplication {
     private static volatile RpcConfig rpcConfig;
 
@@ -18,6 +22,12 @@ public class RpcApplication {
      */
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
+        log.info("rpc init, config = {}",newRpcConfig.toString());
+        //注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}",registryConfig);
     }
 
     /**

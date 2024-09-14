@@ -4,7 +4,6 @@ import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
 import com.example.registry.LocalRegistry;
 import com.example.rpc.RpcApplication;
-import com.example.serializer.JdkSerializer;
 import com.example.serializer.Serializer;
 import com.example.serializer.SerializerFactory;
 import io.vertx.core.Handler;

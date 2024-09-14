@@ -5,9 +5,7 @@ import com.example.serializer.Serializer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * SPI加载器（支持键值对映射）
  */
+@Slf4j
 public class SpiLoader {
     /**
      * 存储已加载的类：接口名 => (key => 实现类) 线程安全
@@ -66,6 +65,7 @@ public class SpiLoader {
      * @param <T>
      */
     public static <T> T getInstance(Class<?> tClass, String key) {
+        log.info("当前正在获取{}的对应类型",tClass.getName());
         String tClassName = tClass.getName();
         Map<String, Class<?>> stringClassMap = loaderMap.get(tClassName);
         if(stringClassMap == null) {
@@ -98,9 +98,9 @@ public class SpiLoader {
         //扫描路径，用户自定义的SPI优先级高于系统SPI
         Map<String,Class<?>> keyClassMap = new HashMap<>();
         for (String scanDir : SCAN_DIRS) {
-            System.out.println(scanDir + loadClass.getName());
+            log.info("{}/{}", scanDir, loadClass.getName());
             List<URL> resources = ResourceUtil.getResources(scanDir + "/" + loadClass.getName());
-            System.out.println(resources);
+            log.info("{}",resources);
             //读取每个资源文件
             for (URL resource : resources) {
                 try {

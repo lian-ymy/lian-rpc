@@ -2,9 +2,6 @@ package com.example.serializer;
 
 import com.example.spi.SpiLoader;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 序列化器（用于获取序列化器对象）
  */

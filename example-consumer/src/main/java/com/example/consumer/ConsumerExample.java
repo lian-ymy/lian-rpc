@@ -2,10 +2,7 @@ package com.example.consumer;
 
 import com.example.common.model.User;
 import com.example.common.service.UserService;
-import com.example.config.RpcConfig;
-import com.example.proxy.ServiceProxy;
 import com.example.proxy.ServiceProxyFactory;
-import com.example.utils.ConfigUtils;
 
 public class ConsumerExample {
     public static void main(String[] args) {

@@ -1,13 +1,11 @@
 package com.example.model;
 
 
-import com.example.serializer.Serializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.io.Serializable;
 
 /**
