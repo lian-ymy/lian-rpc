@@ -11,6 +11,8 @@ import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
 import io.etcd.jetcd.watch.WatchEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -32,6 +34,7 @@ public class EtcdRegistry implements Registry{
      * 本机注册的节点key集合（用于维护续期
      */
     private static final Set<String> localRegisterNodeKeySet = new HashSet<>();
+    private static final Logger log = LoggerFactory.getLogger(EtcdRegistry.class);
 
     /**
      * 注册中心服务缓存
@@ -107,12 +110,14 @@ public class EtcdRegistry implements Registry{
         //优先从本地缓存中获取服务
         List<ServiceMetaInfo> cachedServiceMetaInfos = registryServiceCache.readCache(serviceKey);
         if(cachedServiceMetaInfos != null) {
+            log.info("从缓存中查找数据");
             return cachedServiceMetaInfos;
         }
 
         //前缀搜索，结尾一定要加'/'
         String searchPrefix = ETCD_ROOT_PATH + serviceKey + "/";
 
+        log.info("进行前缀搜索");
         try {
             //前缀查询
             GetOption getOptions = GetOption.builder().isPrefix(true).build();
