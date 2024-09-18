@@ -27,36 +27,7 @@ public class VertxTcpServer implements HttpServer {
         NetServer server = vertx.createNetServer();
 
         //处理请求
-        server.connectHandler(socket -> {
-           //构造parser先完整读取消息头部
-            RecordParser parser = RecordParser.newFixed(8);
-            parser.setOutput(new Handler<Buffer>() {
-                //初始化
-                int size = -1;
-                //一次完整的读取（头+体）
-                Buffer resultBuffer = Buffer.buffer();
-
-                @Override
-                public void handle(Buffer event) {
-                    if(-1 == size ) {
-                        //从封装的头部信息体中读取消息体长度
-                        size = event.getInt(4);
-                        parser.fixedSizeMode(size);
-                        //写入头信息到结果中
-                        resultBuffer.appendBuffer(event);
-                    } else {
-                        //写入体信息到结果中
-                        resultBuffer.appendBuffer(event);
-                        System.out.println(resultBuffer.toString());
-                        //重置一轮
-                        parser.fixedSizeMode(8);
-                        size = -1;
-                        resultBuffer = Buffer.buffer();
-                    }
-                }
-            });
-            socket.handler(parser);
-        });
+        server.connectHandler(new TcpServerHandler());
 
         //启动TCP服务器并监听指定端口
         server.listen(port, result -> {

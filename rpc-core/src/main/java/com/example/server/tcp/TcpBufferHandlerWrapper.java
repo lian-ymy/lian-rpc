@@ -11,8 +11,8 @@ import io.vertx.core.parsetools.RecordParser;
 public class TcpBufferHandlerWrapper implements Handler<Buffer> {
     private final RecordParser recordParser;
 
-    public TcpBufferHandlerWrapper (RecordParser recordParser) {
-        this.recordParser = recordParser;
+    public TcpBufferHandlerWrapper (Handler<Buffer> bufferHandler) {
+        this.recordParser = initRecordParser(bufferHandler);
     }
 
     @Override
