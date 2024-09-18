@@ -13,7 +13,7 @@ public class ProtocolMessageTest {
         ProtocolMessage.Header header = new ProtocolMessage.Header();
         header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
         header.setVersion((byte)0);
-        header.setSerializer((byte) ProtocolMessageSerializerEnum.JSON.getKey());
+        header.setSerializer((byte) ProtocolMessageSerializerEnum.JDK.getKey());
         header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
         header.setStatus((byte) ProtocolMessageStatusEnum.OK.getValue());
         header.setRequestId(IdUtil.getSnowflakeNextId());

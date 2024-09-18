@@ -1,22 +1,28 @@
 package com.example.proxy;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import cn.hutool.core.util.IdUtil;
 import com.example.config.RpcConfig;
 import com.example.constant.RpcConstant;
 import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
 import com.example.model.ServiceMetaInfo;
+import com.example.protocol.*;
 import com.example.registry.Registry;
 import com.example.registry.RegistryFactory;
 import com.example.rpc.RpcApplication;
 import com.example.serializer.Serializer;
 import com.example.serializer.SerializerFactory;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetSocket;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 服务代理(JDK动态代理)
@@ -69,20 +75,53 @@ public class ServiceProxy implements InvocationHandler {
             throw new RuntimeException("暂无服务地址");
         }
         //先取第一个进行测试
-        ServiceMetaInfo serviceMetaInfo1 = serviceMetaInfos.get(0);
-        ///发送请求
-        HttpResponse httpResponse = HttpRequest.post(serviceMetaInfo1.getServiceAddress()).body(serialized).execute();
-        byte[] result = httpResponse.bodyBytes();
-        //反序列化
-        RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
+        ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfos.get(0);
+        //发送TCP请求
+        Vertx vertx = Vertx.vertx();
+        NetClient netClient = vertx.createNetClient();
+        CompletableFuture<RpcResponse> completableFuture = new CompletableFuture<>();
+        netClient.connect(selectedServiceMetaInfo.getServicePort(),selectedServiceMetaInfo.getServiceHost(),
+                handler -> {
+                    if(handler.succeeded()) {
+                        System.out.println("Connected to TCP Server!");
+                        NetSocket socket = handler.result();
+                        //发送数据，构造消息
+                        ProtocolMessage<Object> protocolMessage = new ProtocolMessage<>();
+                        ProtocolMessage.Header header = new ProtocolMessage.Header();
+                        header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
+                        header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
+                        header.setSerializer((byte) ProtocolMessageSerializerEnum
+                                .getSerializerEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
+                        header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
+                        header.setRequestId(IdUtil.getSnowflakeNextId());
+                        protocolMessage.setHeader(header);
+                        protocolMessage.setHeader(header);
+                        //编码请求
+                        try {
+                            Buffer encode = ProtocolMessageEncoder.encode(protocolMessage);
+                            socket.write(encode);
+                        } catch (IOException e) {
+                            throw new RuntimeException("协议消息编码错误！");
+                        }
+
+                        //接受响应
+                        socket.handler(buffer -> {
+                            try {
+                                ProtocolMessage<RpcResponse> responseProtocolMessage =
+                                        (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
+                                completableFuture.complete(responseProtocolMessage.getBody());
+                            } catch (IOException e) {
+                                throw new RuntimeException("协议消息解码错误");
+                            }
+                        });
+
+                    } else {
+                        System.err.println("Failed to connect to TCP Server!");
+                    }
+                });
+        RpcResponse rpcResponse = completableFuture.get();
+        //记得关闭连接
+        netClient.close();
         return rpcResponse.getData();
-//        try(HttpResponse httpResponse = HttpRequest.post("http://localhost:8080").body(serialized).execute()) {
-//            byte[] result = httpResponse.bodyBytes();
-//            //反序列化
-//            RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-//            return rpcResponse.getData();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 }

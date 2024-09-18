@@ -1,9 +1,11 @@
 package com.example.server.tcp;
 
 import com.example.server.HttpServer;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetServer;
+import io.vertx.core.parsetools.RecordParser;
 
 /**
  * tcp服务请求响应处理
@@ -26,17 +28,34 @@ public class VertxTcpServer implements HttpServer {
 
         //处理请求
         server.connectHandler(socket -> {
-            //处理连接
-            socket.handler(buffer -> {
-                //处理收到的字节数组
-                byte[] requestData = buffer.getBytes();
-                //在这里进行自定义的字节数组处理逻辑，解析请求，调用服务，构造响应等
-                byte[] responseData = handleRequest(requestData);
-                //发送响应
-                socket.write(Buffer.buffer(responseData));
-                //接收响应
-                socket.handler(result -> System.out.println("Received from client: " + result.toString()));
+           //构造parser先完整读取消息头部
+            RecordParser parser = RecordParser.newFixed(8);
+            parser.setOutput(new Handler<Buffer>() {
+                //初始化
+                int size = -1;
+                //一次完整的读取（头+体）
+                Buffer resultBuffer = Buffer.buffer();
+
+                @Override
+                public void handle(Buffer event) {
+                    if(-1 == size ) {
+                        //从封装的头部信息体中读取消息体长度
+                        size = event.getInt(4);
+                        parser.fixedSizeMode(size);
+                        //写入头信息到结果中
+                        resultBuffer.appendBuffer(event);
+                    } else {
+                        //写入体信息到结果中
+                        resultBuffer.appendBuffer(event);
+                        System.out.println(resultBuffer.toString());
+                        //重置一轮
+                        parser.fixedSizeMode(8);
+                        size = -1;
+                        resultBuffer = Buffer.buffer();
+                    }
+                }
             });
+            socket.handler(parser);
         });
 
         //启动TCP服务器并监听指定端口

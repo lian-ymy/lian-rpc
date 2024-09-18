@@ -26,7 +26,7 @@ public class ProtocolMessageDecoder {
             throw new RuntimeException("消息magic非法！！！");
         }
         //将读取到的buffer各个参数再填写会到header请求头中
-        header.setMagic(buffer.getByte(0));
+        header.setMagic(magic);
         header.setVersion(buffer.getByte(1));
         header.setSerializer(buffer.getByte(2));
         header.setType(buffer.getByte(3));
@@ -47,17 +47,16 @@ public class ProtocolMessageDecoder {
         if(messageTypeEnum == null) {
             throw new RuntimeException("序列化消息对应的类型不存在！！！");
         }
-        switch (messageTypeEnum) {
-            case RESPONSE:
+        return switch (messageTypeEnum) {
+            case RESPONSE -> {
                 RpcResponse rpcResponse = serializer.deserialize(bodyBytes, RpcResponse.class);
-                return new ProtocolMessage<RpcResponse>(header,rpcResponse);
-            case REQUEST:
+                yield new ProtocolMessage<RpcResponse>(header, rpcResponse);
+            }
+            case REQUEST -> {
                 RpcRequest rpcRequest = serializer.deserialize(bodyBytes, RpcRequest.class);
-                return new ProtocolMessage<RpcRequest>(header,rpcRequest);
-            case HEART_BEAT:
-            case OTHERS:
-            default:
-                throw new RuntimeException("暂不支持当前的消息类型！！！");
-        }
+                yield new ProtocolMessage<RpcRequest>(header, rpcRequest);
+            }
+            default -> throw new RuntimeException("暂不支持当前的消息类型！！！");
+        };
     }
 }
