@@ -1,7 +1,6 @@
 package com.example.proxy;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
 import com.example.config.RpcConfig;
 import com.example.constant.RpcConstant;
 import com.example.loadbalancer.LoadBalancer;
@@ -9,25 +8,20 @@ import com.example.loadbalancer.LoadBalancerFactory;
 import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
 import com.example.model.ServiceMetaInfo;
-import com.example.protocol.*;
 import com.example.registry.Registry;
 import com.example.registry.RegistryFactory;
+import com.example.retry.RetryFactory;
+import com.example.retry.RetryStrategy;
 import com.example.rpc.RpcApplication;
 import com.example.serializer.Serializer;
 import com.example.serializer.SerializerFactory;
 import com.example.server.tcp.VertxTcpClient;
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.NetClient;
-import io.vertx.core.net.NetSocket;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * 服务代理(JDK动态代理)
@@ -85,8 +79,11 @@ public class ServiceProxy implements InvocationHandler {
         Map<String,Object> requestParams = new HashMap<>();
         requestParams.put("methodName", rpcRequest.getMethodName());
         ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfos);
-        //rpc请求调用
-        RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+        //rpc请求调用，加载指定的重试策略类进行重试判断
+        RetryStrategy retryStrategy = RetryFactory.getInstance(RpcApplication.getRpcConfig().getRetryStrategy());
+        RpcResponse rpcResponse = retryStrategy.doRetry(() -> {
+            return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+        });
         return rpcResponse.getData();
     }
 }

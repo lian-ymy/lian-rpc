@@ -1,7 +1,7 @@
 package com.example.config;
 
-import com.example.loadbalancer.LoadBalancer;
 import com.example.loadbalancer.LoadBalancerKeys;
+import com.example.retry.RetryStrategyKeys;
 import com.example.serializer.SerializerKeys;
 import lombok.Data;
 
@@ -22,6 +22,10 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
     /**
      * 模拟调用
      */
