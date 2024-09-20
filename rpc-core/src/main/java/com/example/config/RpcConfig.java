@@ -3,6 +3,7 @@ package com.example.config;
 import com.example.loadbalancer.LoadBalancerKeys;
 import com.example.retry.RetryStrategyKeys;
 import com.example.serializer.SerializerKeys;
+import com.example.tolerant.TolerantStrategyKeys;
 import lombok.Data;
 
 /**
@@ -26,6 +27,10 @@ public class RpcConfig {
      * 重试策略
      */
     private String retryStrategy = RetryStrategyKeys.NO;
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
     /**
      * 模拟调用
      */

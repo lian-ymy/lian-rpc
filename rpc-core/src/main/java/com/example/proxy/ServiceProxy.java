@@ -16,6 +16,8 @@ import com.example.rpc.RpcApplication;
 import com.example.serializer.Serializer;
 import com.example.serializer.SerializerFactory;
 import com.example.server.tcp.VertxTcpClient;
+import com.example.tolerant.TolerantStrategy;
+import com.example.tolerant.TolerantStrategyFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -80,10 +82,17 @@ public class ServiceProxy implements InvocationHandler {
         requestParams.put("methodName", rpcRequest.getMethodName());
         ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfos);
         //rpc请求调用，加载指定的重试策略类进行重试判断
-        RetryStrategy retryStrategy = RetryFactory.getInstance(RpcApplication.getRpcConfig().getRetryStrategy());
-        RpcResponse rpcResponse = retryStrategy.doRetry(() -> {
-            return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
-        });
+        RpcResponse rpcResponse;
+        try {
+            RetryStrategy retryStrategy = RetryFactory.getInstance(RpcApplication.getRpcConfig().getRetryStrategy());
+            rpcResponse = retryStrategy.doRetry(() -> {
+                return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            });
+        } catch (Exception e) {
+            //如果重试后还是抛出异常，就进入容错策略
+            TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+            rpcResponse = tolerantStrategy.doTolerant(null,e);
+        }
         return rpcResponse.getData();
     }
 }
