@@ -68,8 +68,13 @@ public class SpiLoader {
         log.info("当前正在获取{}的对应类型",tClass.getName());
         String tClassName = tClass.getName();
         Map<String, Class<?>> stringClassMap = loaderMap.get(tClassName);
+        //使用双检锁单例模式实现懒加载
         if(stringClassMap == null) {
-            throw new RuntimeException(String.format("SpiLoader 未加载%s类型",tClassName));
+            synchronized (SpiLoader.class) {
+                if(stringClassMap == null) {
+                    load(tClass);
+                }
+            }
         }
         if(!stringClassMap.containsKey(key)) {
             throw new RuntimeException(String.format("SpiLoader 的 %s 不存在key=%s的类型",tClassName, key));

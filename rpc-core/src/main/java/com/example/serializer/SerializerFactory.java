@@ -6,9 +6,6 @@ import com.example.spi.SpiLoader;
  * 序列化器（用于获取序列化器对象）
  */
 public class SerializerFactory {
-    static {
-        SpiLoader.load(Serializer.class);
-    }
 
     /**
      * 默认序列化器

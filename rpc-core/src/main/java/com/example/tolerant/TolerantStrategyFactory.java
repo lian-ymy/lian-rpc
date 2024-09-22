@@ -6,9 +6,6 @@ import com.example.spi.SpiLoader;
  * 容错策略产生工厂类
  */
 public class TolerantStrategyFactory {
-    static {
-        SpiLoader.load(TolerantStrategy.class);
-    }
 
     /**
      * 默认容错策略

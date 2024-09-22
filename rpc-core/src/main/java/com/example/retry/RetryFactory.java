@@ -6,10 +6,6 @@ import com.example.spi.SpiLoader;
  * 重试策略工厂类
  */
 public class RetryFactory {
-    static {
-        SpiLoader.load(RetryStrategy.class);
-    }
-
     /**
      * 默认实现的重试策略
      */
