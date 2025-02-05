@@ -1,5 +1,6 @@
-package com.example.loadbalancer;
+package com.example.loadbalancer.impl;
 
+import com.example.loadbalancer.LoadBalancer;
 import com.example.model.ServiceMetaInfo;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.TreeMap;
 /**
  * 一致性哈希负载均衡器
  */
-public class ConsistentHashLoadBalancer implements LoadBalancer{
+public class ConsistentHashLoadBalancer implements LoadBalancer {
 
     /**
      * 一致性Hash环，存放虚拟节点

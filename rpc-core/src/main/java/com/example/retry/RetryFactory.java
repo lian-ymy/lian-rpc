@@ -1,5 +1,6 @@
 package com.example.retry;
 
+import com.example.retry.impl.NoRetryStrategy;
 import com.example.spi.SpiLoader;
 
 /**

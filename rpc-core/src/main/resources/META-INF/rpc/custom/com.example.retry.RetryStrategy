@@ -1,4 +1,4 @@
-no=com.example.retry.NoRetryStrategy
-fixedInterval=com.example.retry.FixedIntervalRetryStrategy
-increasingTime=com.example.retry.IncreasingTimeRetryStrategy
-exponential=com.example.retry.ExponentialRetryStrategy
+no=com.example.retry.impl.NoRetryStrategy
+fixedInterval=com.example.retry.impl.FixedIntervalRetryStrategy
+increasingTime=com.example.retry.impl.IncreasingTimeRetryStrategy
+exponential=com.example.retry.impl.ExponentialRetryStrategy

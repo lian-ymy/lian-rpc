@@ -1,12 +1,13 @@
-package com.example.loadbalancer;
+package com.example.loadbalancer.impl;
 
+import com.example.loadbalancer.LoadBalancer;
 import com.example.model.ServiceMetaInfo;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class RandomLoadBalancer implements LoadBalancer{
+public class RandomLoadBalancer implements LoadBalancer {
 
     private final Random random = new Random();
 

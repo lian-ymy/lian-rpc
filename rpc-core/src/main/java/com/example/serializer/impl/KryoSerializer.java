@@ -1,8 +1,9 @@
-package com.example.serializer;
+package com.example.serializer.impl;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.example.serializer.Serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,7 +12,7 @@ import java.io.IOException;
 /**
  * Kryo序列化器
  */
-public class KryoSerializer implements Serializer{
+public class KryoSerializer implements Serializer {
     /**
      * kryo线程不安全，使用ThreadLocal保证每个线程只有一个Kryo
      */

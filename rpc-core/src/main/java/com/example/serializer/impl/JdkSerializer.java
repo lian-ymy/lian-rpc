@@ -1,4 +1,6 @@
-package com.example.serializer;
+package com.example.serializer.impl;
+import com.example.serializer.Serializer;
+
 import java.io.*;
 
 /**

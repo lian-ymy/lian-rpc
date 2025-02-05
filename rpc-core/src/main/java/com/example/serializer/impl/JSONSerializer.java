@@ -1,8 +1,9 @@
-package com.example.serializer;
+package com.example.serializer.impl;
 
 
 import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
+import com.example.serializer.Serializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.io.IOException;
 /**
  * JSON序列化表
  */
-public class JSONSerializer implements Serializer{
+public class JSONSerializer implements Serializer {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

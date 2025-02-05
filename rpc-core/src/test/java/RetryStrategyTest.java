@@ -1,5 +1,5 @@
 import com.example.model.RpcResponse;
-import com.example.retry.IncreasingTimeRetryStrategy;
+import com.example.retry.impl.IncreasingTimeRetryStrategy;
 import com.example.retry.RetryStrategy;
 import org.junit.Test;
 

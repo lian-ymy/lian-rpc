@@ -1,7 +1,10 @@
 package com.example.model;
 
 import cn.hutool.core.util.StrUtil;
+import com.example.model.constant.ServiceWeight;
 import lombok.Data;
+
+import java.util.Map;
 
 /**
  * 服务元信息(注册信息)
@@ -32,6 +35,37 @@ public class ServiceMetaInfo {
      * 服务分组
      */
     private String serviceGroup = "default";
+
+    /**
+     * 节点注册时间
+     */
+    private String registerTime = "";
+
+    /**
+     * 节点启动时间
+     */
+    private String startTime = "";
+
+    /**
+     * 通信协议，默认 HTTP
+     */
+    private String protocol = Protocol.HTTP;
+
+    /**
+     * 服务权重，默认 0
+     */
+    private Integer serviceWeight = ServiceWeight.ZERO;
+
+    /**
+     * 服务的动态权重
+     */
+    private Integer currentWeight = ServiceWeight.ZERO;
+
+    /**
+     * 自定义元数据
+     * 允许用户附加额外的服务信息，便于扩展。
+     */
+    private Map<String, String> metadata;
 
     /**
      * 获取服务键名

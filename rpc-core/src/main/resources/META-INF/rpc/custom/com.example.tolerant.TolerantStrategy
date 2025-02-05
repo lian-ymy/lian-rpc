@@ -1,4 +1,4 @@
-failBack=com.example.tolerant.FailBackTolerantStrategy
-failFast=com.example.tolerant.FailFastTolerantStrategy
-failOver=com.example.tolerant.FailOverTolerantStrategy
-failSafe=com.example.tolerant.FailSafeTolerantStrategy
+failBack=com.example.tolerant.impl.FailBackTolerantStrategy
+failFast=com.example.tolerant.impl.FailFastTolerantStrategy
+failOver=com.example.tolerant.impl.FailOverTolerantStrategy
+failSafe=com.example.tolerant.impl.FailSafeTolerantStrategy

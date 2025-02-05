@@ -1,5 +1,6 @@
-package com.example.loadbalancer;
+package com.example.loadbalancer.impl;
 
+import com.example.loadbalancer.LoadBalancer;
 import com.example.model.ServiceMetaInfo;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 轮询负载均衡器
  */
-public class RoundRobinLoadBalancer implements LoadBalancer{
+public class RoundRobinLoadBalancer implements LoadBalancer {
 
     /**
      * 使用原子类的整数来记录当前轮询的下标，保证线程安全

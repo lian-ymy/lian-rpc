@@ -221,8 +221,6 @@ public class EtcdRegistry implements Registry{
                             registryServiceCache.clearCache(serviceNodeKey);
                             break;
                         case PUT:
-                            registryServiceCache.clearCache(serviceNodeKey);
-                            break;
                         default:
                             break;
                     }

@@ -1,6 +1,7 @@
 package com.example.tolerant;
 
 import com.example.spi.SpiLoader;
+import com.example.tolerant.impl.FailFastTolerantStrategy;
 
 /**
  * 容错策略产生工厂类

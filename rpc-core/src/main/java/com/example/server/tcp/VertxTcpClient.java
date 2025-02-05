@@ -41,7 +41,6 @@ public class VertxTcpClient {
                         //生成全局请求ID
                         header.setRequestId(IdUtil.getSnowflakeNextId());
                         protocolMessage.setHeader(header);
-                        protocolMessage.setHeader(header);
                         //编码请求
                         try {
                             Buffer encode = ProtocolMessageEncoder.encode(protocolMessage);

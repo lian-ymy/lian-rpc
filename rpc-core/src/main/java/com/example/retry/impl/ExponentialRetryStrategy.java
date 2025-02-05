@@ -1,6 +1,7 @@
-package com.example.retry;
+package com.example.retry.impl;
 
 import com.example.model.RpcResponse;
+import com.example.retry.RetryStrategy;
 import com.github.rholder.retry.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * 指数时间增长重试策略
  */
 @Slf4j
-public class ExponentialRetryStrategy implements RetryStrategy{
+public class ExponentialRetryStrategy implements RetryStrategy {
 
     /**
      * 重试

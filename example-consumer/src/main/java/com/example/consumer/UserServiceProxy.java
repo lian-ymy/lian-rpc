@@ -6,7 +6,7 @@ import com.example.common.model.User;
 import com.example.common.service.UserService;
 import com.example.model.RpcRequest;
 import com.example.model.RpcResponse;
-import com.example.serializer.JdkSerializer;
+import com.example.serializer.impl.JdkSerializer;
 
 import java.io.IOException;
 

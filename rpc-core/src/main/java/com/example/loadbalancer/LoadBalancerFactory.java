@@ -1,5 +1,6 @@
 package com.example.loadbalancer;
 
+import com.example.loadbalancer.impl.RoundRobinLoadBalancer;
 import com.example.spi.SpiLoader;
 
 /**
