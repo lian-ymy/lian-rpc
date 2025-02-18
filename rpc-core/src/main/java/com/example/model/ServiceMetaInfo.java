@@ -1,7 +1,9 @@
 package com.example.model;
 
 import cn.hutool.core.util.StrUtil;
+import com.example.model.constant.Protocol;
 import com.example.model.constant.ServiceWeight;
+import io.netty.handler.ssl.ApplicationProtocolConfig;
 import lombok.Data;
 
 import java.util.Map;

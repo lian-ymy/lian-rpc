@@ -4,13 +4,14 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.example.loadbalancer.LoadBalancer;
 import com.example.model.ServiceMetaInfo;
-import com.example.registry.ServiceMetaInfoUpdater;
+import com.example.registry.updater.ServiceMetaInfoUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/lian-ymy">lian</a>
@@ -47,7 +48,7 @@ public class WeightLoadBalancer implements LoadBalancer {
         });
 
         //异步更新注册节点信息到注册中心
-        ServiceMetaInfoUpdater.asyncUpdateServiceMetaInfo(serviceMetaInfoList);
+        ServiceMetaInfoUpdater.asynUpdateServiceMetaInfos(serviceMetaInfoList);
 
         return selectServiceMeta;
     }

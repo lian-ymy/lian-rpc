@@ -16,21 +16,37 @@ import lombok.extern.slf4j.Slf4j;
 public class RpcApplication {
     private static volatile RpcConfig rpcConfig;
 
-    /**
-     * 框架初始化，可以传入自定义配置
-     * @param newRpcConfig
-     */
-    public static void init(RpcConfig newRpcConfig) {
-        rpcConfig = newRpcConfig;
-        log.info("rpc init, config = {}",newRpcConfig.toString());
-        //注册中心初始化
-        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
-        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
-        registry.init(registryConfig);
-        log.info("registry init, config = {}",registryConfig);
+    //是否需要启动 RPC 框架服务器
+    public static volatile boolean needServer;
 
-        //创建并注册Shutdown Hook，JVM退出时执行操作，程序退出时会自动执行destroy操作
-        Runtime.getRuntime().addShutdownHook(new Thread(registry::destroy));
+    public static void setRpcConfig(RpcConfig newRpcConfig) {
+        if (rpcConfig == null) {
+            synchronized (RpcConfig.class) {
+                if (rpcConfig == null) {
+                    rpcConfig = newRpcConfig;
+                }
+            }
+        }
+    }
+
+    //启动服务注册中心 - 心跳检测
+    public static void initRegistry(RpcConfig newConfig) {
+        if (rpcConfig == null) {
+            rpcConfig = newConfig;
+            log.info("Rpc Config init succeed!, config = {}", newConfig);
+        }
+
+        //通过 RpcConfig 获取 RegistryConfig
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+
+        //通过 RegistryConfig 获取到 RegistryType 实例化 Registry
+        Registry registry = RegistryFactory.getRegistry(registryConfig.getRegistryType());
+
+        //调用 Registry 的初始化加载RegistryConfig
+        registry.init(registryConfig);
+
+        //创建并注册 Shutdown Hook, JVM 退出时执行操作
+        Runtime.getRuntime().addShutdownHook(new Thread(registry::destory));
     }
 
     /**
@@ -43,7 +59,7 @@ public class RpcApplication {
         } catch (Exception e) {
             newRpcConfig = new RpcConfig();
         }
-        init(newRpcConfig);
+        initRegistry(newRpcConfig);
     }
 
     /**

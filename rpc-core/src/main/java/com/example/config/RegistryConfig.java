@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.registry.RegistryKeys;
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ public class RegistryConfig {
     /**
      * 注册中心类别
      */
-    private String registry = "etcd";
+    private String registryType = RegistryKeys.ETCD;
 
     /**
      * 注册中心地址
